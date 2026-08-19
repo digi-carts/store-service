@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller exposing store page HTTP APIs for <em>store-service</em>.
+ */
 @RestController
 @RequestMapping("/store-pages")
 public class StorePageController {

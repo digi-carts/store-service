@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Spring Data JPA repository for store  persistence.
+ */
 @Repository
 public interface StoreRepository extends JpaRepository<Store, String> {
     Optional<Store> findByAdminId(String adminId);

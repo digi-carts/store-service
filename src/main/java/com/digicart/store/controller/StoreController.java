@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * REST controller exposing store HTTP APIs for <em>store-service</em>.
+ */
 @RestController
 @RequestMapping("/stores")
 public class StoreController {
