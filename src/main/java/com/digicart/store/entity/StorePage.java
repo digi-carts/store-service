@@ -42,22 +42,96 @@ public class StorePage {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+    /**
+     * Creates a new {@code StorePage}.
+     */
     public StorePage() {}
-
+    /**
+     * Returns id.
+     * @return the string
+     */
     public String getId() { return id; }
+    /**
+     * Sets id.
+     *
+     * @param id resource identifier
+     */
     public void setId(String id) { this.id = id; }
+    /**
+     * Returns store id.
+     * @return the string
+     */
     public String getStoreId() { return storeId; }
+    /**
+     * Sets store id.
+     *
+     * @param storeId store (tenant) identifier
+     */
     public void setStoreId(String storeId) { this.storeId = storeId; }
+    /**
+     * Returns slug.
+     * @return the string
+     */
     public String getSlug() { return slug; }
+    /**
+     * Sets slug.
+     *
+     * @param slug page slug
+     */
     public void setSlug(String slug) { this.slug = slug; }
+    /**
+     * Returns title.
+     * @return the string
+     */
     public String getTitle() { return title; }
+    /**
+     * Sets title.
+     *
+     * @param title title
+     */
     public void setTitle(String title) { this.title = title; }
+    /**
+     * Returns content.
+     * @return the string
+     */
     public String getContent() { return content; }
+    /**
+     * Sets content.
+     *
+     * @param content content
+     */
     public void setContent(String content) { this.content = content; }
+    /**
+     * Returns published.
+     * @return the boolean
+     */
     public Boolean getPublished() { return published; }
+    /**
+     * Sets published.
+     *
+     * @param published published
+     */
     public void setPublished(Boolean published) { this.published = published; }
+    /**
+     * Returns created at.
+     * @return the instant
+     */
     public Instant getCreatedAt() { return createdAt; }
+    /**
+     * Sets created at.
+     *
+     * @param createdAt created at
+     */
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+    /**
+     * Returns updated at.
+     * @return the instant
+     */
     public Instant getUpdatedAt() { return updatedAt; }
+    /**
+     * Sets updated at.
+     *
+     * @param updatedAt updated at
+     */
     public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
 }
