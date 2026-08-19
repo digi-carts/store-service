@@ -12,6 +12,19 @@ import java.util.Optional;
  */
 @Repository
 public interface StorePageRepository extends JpaRepository<StorePage, String> {
+    /**
+     * Finds by store id.
+     *
+     * @param storeId store (tenant) identifier
+     * @return matching records
+     */
     List<StorePage> findByStoreId(String storeId);
+    /**
+     * Finds by store id and slug.
+     *
+     * @param storeId store (tenant) identifier
+     * @param slug page slug
+     * @return the value if present
+     */
     Optional<StorePage> findByStoreIdAndSlug(String storeId, String slug);
 }
