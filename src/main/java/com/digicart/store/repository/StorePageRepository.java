@@ -7,6 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Spring Data JPA repository for store page  persistence.
+ */
 @Repository
 public interface StorePageRepository extends JpaRepository<StorePage, String> {
     List<StorePage> findByStoreId(String storeId);

@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Application service implementing store use cases for <em>store-service</em>.
+ */
 @Service
 public class StoreService {
 

@@ -1,5 +1,8 @@
 package com.digicart.store.dto;
 
+/**
+ * Request/response DTO: Update Store Page Request.
+ */
 public class UpdateStorePageRequest {
 
     private String slug;
