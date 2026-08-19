@@ -9,6 +9,9 @@
     </changeSet>
 
     <changeSet id="002-create-stores-table" author="digicart">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="stores" schemaName="store_svc"/></not>
+        </preConditions>
         <createTable tableName="stores" schemaName="store_svc">
             <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
                 <constraints primaryKey="true" nullable="false"/>
@@ -65,6 +68,9 @@
     </changeSet>
 
     <changeSet id="003-create-store-pages-table" author="digicart">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="store_pages" schemaName="store_svc"/></not>
+        </preConditions>
         <createTable tableName="store_pages" schemaName="store_svc">
             <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
                 <constraints primaryKey="true" nullable="false"/>
