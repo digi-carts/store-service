@@ -7,7 +7,6 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class CreateStorePageRequest {
 
-    @NotBlank
     private String storeId;
 
     @NotBlank
