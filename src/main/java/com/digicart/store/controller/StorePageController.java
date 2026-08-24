@@ -4,7 +4,6 @@ import com.digicart.store.dto.CreateStorePageRequest;
 import com.digicart.store.dto.UpdateStorePageRequest;
 import com.digicart.store.entity.StorePage;
 import com.digicart.store.service.StorePageService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,11 @@ public class StorePageController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StorePage>> findAll() {
+    public ResponseEntity<List<StorePage>> findAll(
+            @RequestHeader(value = "X-Store-Id", required = false) String storeId) {
+        if (storeId != null && !storeId.isBlank()) {
+            return ResponseEntity.ok(storePageService.findByStoreId(storeId));
+        }
         return ResponseEntity.ok(storePageService.findAll());
     }
 
@@ -51,9 +54,13 @@ public class StorePageController {
 
     @PostMapping
     public ResponseEntity<StorePage> create(
-            @Valid @RequestBody CreateStorePageRequest request,
+            @RequestBody CreateStorePageRequest request,
+            @RequestHeader(value = "X-Store-Id", required = false) String storeId,
             @RequestHeader(value = "X-User-Id", required = false) String userId,
             @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        if (storeId != null && !storeId.isBlank() && (request.getStoreId() == null || request.getStoreId().isBlank())) {
+            request.setStoreId(storeId);
+        }
         return ResponseEntity.status(HttpStatus.CREATED).body(storePageService.create(request));
     }
 
