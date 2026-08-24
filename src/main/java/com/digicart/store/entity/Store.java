@@ -1,6 +1,8 @@
 package com.digicart.store.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -58,6 +60,7 @@ public class Store {
     @Column(name = "template", nullable = false)
     private String template = "default";
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "branding", columnDefinition = "jsonb", nullable = false)
     private String branding = "{}";
 
