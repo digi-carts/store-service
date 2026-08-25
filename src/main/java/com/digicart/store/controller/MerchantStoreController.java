@@ -1,0 +1,101 @@
+package com.digicart.store.controller;
+
+import com.digicart.store.dto.CreateStoreRequest;
+import com.digicart.store.dto.UpdateDomainRequest;
+import com.digicart.store.dto.UpdatePublishRequest;
+import com.digicart.store.dto.UpdateStoreRequest;
+import com.digicart.store.entity.Store;
+import com.digicart.store.service.StoreService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
+
+/**
+ * Merchant-facing convenience controller — operates on the caller's own store
+ * using the X-Store-Id header injected by the API gateway.
+ */
+@RestController
+@RequestMapping("/api/store")
+public class MerchantStoreController {
+
+    private final StoreService storeService;
+
+    public MerchantStoreController(StoreService storeService) {
+        this.storeService = storeService;
+    }
+
+    @GetMapping
+    public ResponseEntity<Store> getMyStore(
+            @RequestHeader("X-Store-Id") String storeId) {
+        return ResponseEntity.ok(storeService.findById(storeId));
+    }
+
+    @PatchMapping
+    public ResponseEntity<Store> updateMyStore(
+            @RequestHeader("X-Store-Id") String storeId,
+            @RequestBody UpdateStoreRequest request) {
+        return ResponseEntity.ok(storeService.update(storeId, request));
+    }
+
+    @PatchMapping("/publish")
+    public ResponseEntity<Store> updatePublish(
+            @RequestHeader("X-Store-Id") String storeId,
+            @RequestBody UpdatePublishRequest request) {
+        UpdateStoreRequest update = new UpdateStoreRequest();
+        update.setPublished(request.getPublished());
+        return ResponseEntity.ok(storeService.update(storeId, update));
+    }
+
+    @PatchMapping("/domain")
+    public ResponseEntity<Store> updateDomain(
+            @RequestHeader("X-Store-Id") String storeId,
+            @RequestBody UpdateDomainRequest request) {
+        UpdateStoreRequest update = new UpdateStoreRequest();
+        update.setDomain(request.getDomain());
+        update.setStoreUrlId(request.getStoreUrlId());
+        return ResponseEntity.ok(storeService.update(storeId, update));
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<Map<String, String>> upload(
+            @RequestHeader("X-Store-Id") String storeId,
+            @RequestParam("file") MultipartFile file) {
+        String filename = file.getOriginalFilename();
+        if (filename == null || filename.isBlank()) filename = "upload";
+        return ResponseEntity.ok(Map.of("url", "/uploads/" + filename));
+    }
+
+    // ---- Admin endpoints ----
+
+    @PostMapping("/admin-create")
+    public ResponseEntity<Store> adminCreate(
+            @RequestHeader(value = "X-User-Role", required = false) String userRole,
+            @RequestBody CreateStoreRequest request) {
+        if (!"ADMIN".equals(userRole)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(storeService.create(request));
+    }
+
+    @PatchMapping("/admin-update/{id}")
+    public ResponseEntity<Store> adminUpdate(
+            @PathVariable String id,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole,
+            @RequestBody UpdateStoreRequest request) {
+        if (!"ADMIN".equals(userRole)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(storeService.update(id, request));
+    }
+
+    @DeleteMapping("/admin-delete/{id}")
+    public ResponseEntity<Void> adminDelete(
+            @PathVariable String id,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        storeService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+}

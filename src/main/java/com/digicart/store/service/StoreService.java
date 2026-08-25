@@ -8,6 +8,7 @@ import com.digicart.store.repository.StoreRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Application service implementing store use cases for <em>store-service</em>.
@@ -80,5 +81,15 @@ public class StoreService {
             throw new EntityNotFoundException("Store not found with id: " + id);
         }
         storeRepository.deleteById(id);
+    }
+
+    public List<Store> findByIds(List<String> ids) {
+        return storeRepository.findByIdIn(ids);
+    }
+
+    public Map<String, Object> getStats() {
+        long total = storeRepository.count();
+        long published = storeRepository.countByPublishedTrue();
+        return Map.of("total", total, "published", published, "unpublished", total - published);
     }
 }
