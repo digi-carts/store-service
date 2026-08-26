@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="004-create-ai-config-table" author="digicart">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="ai_config" schemaName="store_svc"/></not>
+        </preConditions>
+        <createTable tableName="ai_config" schemaName="store_svc">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="enabled" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="model" type="VARCHAR(255)"/>
+            <column name="system_prompt" type="TEXT"/>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()"/>
+        </createTable>
+        <createIndex tableName="ai_config" schemaName="store_svc" indexName="idx_ai_config_store_id">
+            <column name="store_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="005-create-mail-template-table" author="digicart">
+        <preConditions onFail="MARK_RAN">
+            <not><tableExists tableName="mail_template" schemaName="store_svc"/></not>
+        </preConditions>
+        <createTable tableName="mail_template" schemaName="store_svc">
+            <column name="id" type="UUID" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="store_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject" type="VARCHAR(255)"/>
+            <column name="html_body" type="TEXT"/>
+            <column name="updated_at" type="TIMESTAMPTZ" defaultValueComputed="NOW()"/>
+        </createTable>
+        <addUniqueConstraint
+            tableName="mail_template"
+            schemaName="store_svc"
+            columnNames="store_id, event"
+            constraintName="uq_mail_template_store_event"/>
+        <createIndex tableName="mail_template" schemaName="store_svc" indexName="idx_mail_template_store_id">
+            <column name="store_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
