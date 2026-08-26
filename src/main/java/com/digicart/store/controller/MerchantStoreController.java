@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,8 +29,12 @@ public class MerchantStoreController {
     }
 
     @GetMapping
-    public ResponseEntity<Store> getMyStore(
-            @RequestHeader("X-Store-Id") String storeId) {
+    public ResponseEntity<?> getMyStore(
+            @RequestHeader(value = "X-Store-Id", required = false) String storeId,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        if ("user".equalsIgnoreCase(userRole)) {
+            return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
+        }
         return ResponseEntity.ok(storeService.findById(storeId));
     }
 
@@ -60,11 +65,17 @@ public class MerchantStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Map<String, String>> upload(
-            @RequestHeader("X-Store-Id") String storeId,
-            @RequestParam("file") MultipartFile file) {
-        String filename = file.getOriginalFilename();
-        if (filename == null || filename.isBlank()) filename = "upload";
+    public ResponseEntity<?> upload(
+            @RequestHeader(value = "X-Store-Id", required = false) String storeId,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        if (file != null) {
+            String ct = file.getContentType();
+            List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+            if (ct == null || !allowed.contains(ct)) {
+                return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
+            }
+        }
+        String filename = file != null && file.getOriginalFilename() != null ? file.getOriginalFilename() : "upload";
         return ResponseEntity.ok(Map.of("url", "/uploads/" + filename));
     }
 
