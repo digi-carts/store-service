@@ -23,7 +23,10 @@ public class AiConfigController {
 
     @GetMapping("/ai-settings")
     public ResponseEntity<AiConfig> getAiSettings(
-            @RequestHeader("X-Store-Id") String storeId) {
+            @RequestHeader(value = "X-Store-Id", required = false) String storeId) {
+        if (storeId == null || storeId.isBlank()) {
+            return ResponseEntity.ok(aiConfigService.findByStoreIdOrDefault(null));
+        }
         return ResponseEntity.ok(aiConfigService.findByStoreIdOrDefault(storeId));
     }
 

@@ -5,6 +5,7 @@ import com.digicart.store.dto.UpdateDomainRequest;
 import com.digicart.store.dto.UpdatePublishRequest;
 import com.digicart.store.dto.UpdateStoreRequest;
 import com.digicart.store.entity.Store;
+import com.digicart.store.service.GcsStorageService;
 import com.digicart.store.service.StoreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,11 @@ import java.util.Map;
 public class MerchantStoreController {
 
     private final StoreService storeService;
+    private final GcsStorageService gcsStorageService;
 
-    public MerchantStoreController(StoreService storeService) {
+    public MerchantStoreController(StoreService storeService, GcsStorageService gcsStorageService) {
         this.storeService = storeService;
+        this.gcsStorageService = gcsStorageService;
     }
 
     @GetMapping
@@ -34,6 +37,9 @@ public class MerchantStoreController {
             @RequestHeader(value = "X-User-Role", required = false) String userRole) {
         if ("user".equalsIgnoreCase(userRole)) {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
+        }
+        if (storeId == null || storeId.isBlank()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "No store found"));
         }
         return ResponseEntity.ok(storeService.findById(storeId));
     }
@@ -68,15 +74,23 @@ public class MerchantStoreController {
     public ResponseEntity<?> upload(
             @RequestHeader(value = "X-Store-Id", required = false) String storeId,
             @RequestParam(value = "file", required = false) MultipartFile file) {
-        if (file != null) {
-            String ct = file.getContentType();
-            List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
-            if (ct == null || !allowed.contains(ct)) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
-            }
+        if (file == null || file.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "No file provided"));
         }
-        String filename = file != null && file.getOriginalFilename() != null ? file.getOriginalFilename() : "upload";
-        return ResponseEntity.ok(Map.of("url", "/uploads/" + filename));
+        String ct = file.getContentType();
+        List<String> allowed = List.of("image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml");
+        if (ct == null || !allowed.contains(ct)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid file type"));
+        }
+        if (!gcsStorageService.isConfigured()) {
+            return ResponseEntity.status(503).body(Map.of("error", "File storage not configured"));
+        }
+        try {
+            String url = gcsStorageService.upload(file);
+            return ResponseEntity.ok(Map.of("url", url));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", "Upload failed"));
+        }
     }
 
     // ---- Admin endpoints ----
