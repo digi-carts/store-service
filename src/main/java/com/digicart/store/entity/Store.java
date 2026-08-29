@@ -1,12 +1,18 @@
 package com.digicart.store.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.UUID;
 
+/**
+ * JPA entity mapped in this service schema (Store).
+ */
 @Entity
 @Table(name = "stores", schema = "store_svc")
 @EntityListeners(AuditingEntityListener.class)
@@ -14,7 +20,7 @@ public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    private UUID id;
 
     @Column(name = "admin_id", nullable = false, unique = true)
     private String adminId;
@@ -55,6 +61,7 @@ public class Store {
     @Column(name = "template", nullable = false)
     private String template = "default";
 
+    @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "branding", columnDefinition = "jsonb", nullable = false)
     private String branding = "{}";
 
@@ -68,8 +75,8 @@ public class Store {
 
     public Store() {}
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
     public String getAdminId() { return adminId; }
     public void setAdminId(String adminId) { this.adminId = adminId; }
     public String getName() { return name; }

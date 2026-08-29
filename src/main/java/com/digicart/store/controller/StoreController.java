@@ -10,9 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+/**
+ * REST controller exposing store HTTP APIs for <em>store-service</em>.
+ */
 @RestController
-@RequestMapping("/stores")
+@RequestMapping("/api/stores")
 public class StoreController {
 
     private final StoreService storeService;
@@ -68,5 +72,27 @@ public class StoreController {
             @RequestHeader(value = "X-User-Role", required = false) String userRole) {
         storeService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<Store>> findAllAlias(
+            @RequestHeader(value = "X-User-Id", required = false) String userId,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        return ResponseEntity.ok(storeService.findAll());
+    }
+
+    @GetMapping("/by-ids")
+    public ResponseEntity<List<Store>> findByIds(
+            @RequestParam("ids") List<String> ids,
+            @RequestHeader(value = "X-User-Id", required = false) String userId,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        return ResponseEntity.ok(storeService.findByIds(ids));
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Object>> getStats(
+            @RequestHeader(value = "X-User-Id", required = false) String userId,
+            @RequestHeader(value = "X-User-Role", required = false) String userRole) {
+        return ResponseEntity.ok(storeService.getStats());
     }
 }
