@@ -1,5 +1,7 @@
 package com.digicart.store.dto;
 
+import java.util.Map;
+
 /**
  * Request/response DTO: Update Store Request.
  */
@@ -17,7 +19,7 @@ public class UpdateStoreRequest {
     private Integer visitCount;
     private Integer availableDays;
     private String template;
-    private String branding;
+    private Map<String, Object> branding;
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -43,6 +45,6 @@ public class UpdateStoreRequest {
     public void setAvailableDays(Integer availableDays) { this.availableDays = availableDays; }
     public String getTemplate() { return template; }
     public void setTemplate(String template) { this.template = template; }
-    public String getBranding() { return branding; }
-    public void setBranding(String branding) { this.branding = branding; }
+    public Map<String, Object> getBranding() { return branding; }
+    public void setBranding(Map<String, Object> branding) { this.branding = branding; }
 }
