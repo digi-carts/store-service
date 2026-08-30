@@ -1,6 +1,7 @@
 package com.digicart.store.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import java.util.Map;
 
 /**
  * Request/response DTO: Create Store Request.
@@ -24,7 +25,7 @@ public class CreateStoreRequest {
     private Boolean published = false;
     private Boolean live = false;
     private String template = "default";
-    private String branding = "{}";
+    private Map<String, Object> branding;
 
     public String getAdminId() { return adminId; }
     public void setAdminId(String adminId) { this.adminId = adminId; }
@@ -48,6 +49,6 @@ public class CreateStoreRequest {
     public void setLive(Boolean live) { this.live = live; }
     public String getTemplate() { return template; }
     public void setTemplate(String template) { this.template = template; }
-    public String getBranding() { return branding; }
-    public void setBranding(String branding) { this.branding = branding; }
+    public Map<String, Object> getBranding() { return branding; }
+    public void setBranding(Map<String, Object> branding) { this.branding = branding; }
 }

@@ -8,6 +8,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -63,7 +65,7 @@ public class Store {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "branding", columnDefinition = "jsonb", nullable = false)
-    private String branding = "{}";
+    private Map<String, Object> branding = new HashMap<>();
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -103,8 +105,8 @@ public class Store {
     public void setAvailableDays(Integer availableDays) { this.availableDays = availableDays; }
     public String getTemplate() { return template; }
     public void setTemplate(String template) { this.template = template; }
-    public String getBranding() { return branding; }
-    public void setBranding(String branding) { this.branding = branding; }
+    public Map<String, Object> getBranding() { return branding; }
+    public void setBranding(Map<String, Object> branding) { this.branding = branding; }
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
