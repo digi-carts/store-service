@@ -17,5 +17,12 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     liquibase-schema: public
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
 server:
   port: ${PORT:3008}
+
+gcs:
+  bucket: ${GCS_BUCKET:}
