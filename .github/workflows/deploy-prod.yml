@@ -53,4 +53,5 @@ jobs:
           gcloud run services update ${{ env.SERVICE }} \
             --region ${{ env.REGION }} \
             --image ${{ env.IMAGE }}:latest \
+            --set-env-vars GCS_BUCKET=digi-cart-store-uploads \
             --quiet
