@@ -53,7 +53,6 @@ public class StoreController {
             @Valid @RequestBody CreateStoreRequest request,
             @RequestHeader(value = "X-User-Id", required = false) String userId,
             @RequestHeader(value = "X-User-Role", required = false) String userRole) {
-        request.setAdminId(userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(storeService.create(request));
     }
 
