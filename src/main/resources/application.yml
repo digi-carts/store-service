@@ -21,8 +21,13 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.actuate.autoconfigure.tracing.BraveAutoConfiguration
   cloud:
     gcp:
+      sql:
+        enabled: false
       trace:
         enabled: true
         sampling-rate: 1.0
