@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Application service implementing store use cases for <em>store-service</em>.
@@ -27,7 +28,7 @@ public class StoreService {
     }
 
     public Store findById(String id) {
-        return storeRepository.findById(id)
+        return storeRepository.findById(UUID.fromString(id))
                 .orElseThrow(() -> new EntityNotFoundException("Store not found with id: " + id));
     }
 
@@ -77,14 +78,15 @@ public class StoreService {
     }
 
     public void delete(String id) {
-        if (!storeRepository.existsById(id)) {
+        if (!storeRepository.existsById(UUID.fromString(id))) {
             throw new EntityNotFoundException("Store not found with id: " + id);
         }
-        storeRepository.deleteById(id);
+        storeRepository.deleteById(UUID.fromString(id));
     }
 
     public List<Store> findByIds(List<String> ids) {
-        return storeRepository.findByIdIn(ids);
+        List<UUID> uuids = ids.stream().map(UUID::fromString).toList();
+        return storeRepository.findByIdIn(uuids);
     }
 
     public Map<String, Object> getStats() {
