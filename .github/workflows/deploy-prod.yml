@@ -53,5 +53,5 @@ jobs:
           gcloud run services update ${{ env.SERVICE }} \
             --region ${{ env.REGION }} \
             --image ${{ env.IMAGE }}:latest \
-            --update-env-vars GCS_BUCKET=digi-cart-store-uploads \
+            --update-env-vars GCS_BUCKET=digi-cart-store-uploads,SPRING_CLOUD_GCP_SQL_ENABLED=false \
             --quiet
